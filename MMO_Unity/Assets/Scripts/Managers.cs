@@ -13,6 +13,20 @@ public class Managers : MonoBehaviour
         }
     }
 
+    InputManager input = new InputManager();
+    public static InputManager Input
+    {
+        get
+        {
+            return Inst.input;
+        }
+    }
+
+    void Update()
+    {
+        input.OnUpdate();
+    }
+
     private static void Init()
     {
         if (instance == null)
