@@ -22,6 +22,15 @@ public class Managers : MonoBehaviour
         }
     }
 
+    ResourceManager resource = new ResourceManager();
+    public static ResourceManager Resource
+    {
+        get
+        {
+            return Inst.resource;
+        }
+    }
+
     void Update()
     {
         input.OnUpdate();
