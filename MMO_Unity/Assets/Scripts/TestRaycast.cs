@@ -26,16 +26,17 @@ public class TestRaycast : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
             Vector3 cameraPos = Camera.main.transform.position;
 
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
-            Vector3 dir = mousePos - cameraPos;
-            dir.Normalize();
+            Debug.DrawRay(cameraPos, ray.direction * raycastDistance, Color.red, 1.0f);
 
-            Debug.DrawRay(cameraPos, dir * raycastDistance, Color.red, 1.0f);
+            // int mask = (1 << 8) | (1 << 9) | (1 << 10);
+            LayerMask mask = LayerMask.GetMask("Monster") | LayerMask.GetMask("Wall") | LayerMask.GetMask("Player");
 
             RaycastHit hit;
-            if (Physics.Raycast(cameraPos, dir, out hit, raycastDistance))
+            if (Physics.Raycast(ray, out hit, raycastDistance, mask))
             {
                 Debug.Log($"Raycast Camer @{hit.collider.gameObject.name}");
             }
