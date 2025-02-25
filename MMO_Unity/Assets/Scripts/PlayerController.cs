@@ -14,15 +14,38 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float rotSpeed = 180.0f;
 
+    [SerializeField]
+    float raycastDistance = 100.0f;
+
+    Vector3 destPos;
+
+    bool moveToDest = false;
+
     void Start()
     {
         Managers.Input.KeyAction -= OnKeyboard;
         Managers.Input.KeyAction += OnKeyboard;
+        Managers.Input.MouseAction -= OnMouseClicked;
+        Managers.Input.MouseAction += OnMouseClicked;
     }
 
     void Update()
     {
+        if (moveToDest == false)
+            return;
 
+        Vector3 dir = destPos - transform.position;
+        if (dir.magnitude < 0.0001f)
+        {
+            moveToDest = false;
+        }
+        else
+        {
+            float moveDist = Mathf.Clamp(moveSpeed * Time.deltaTime, 0, dir.magnitude);
+            transform.position += dir.normalized * moveDist;
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotSpeed);
+        }
     }
 
     /// <summary>
@@ -49,6 +72,23 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), Time.deltaTime * rotSpeed);
             transform.position += Vector3.right * Time.deltaTime * moveSpeed;
+        }
+
+        moveToDest = false;
+    }
+
+    void OnMouseClicked(Define.MouseEvent evt)
+    {
+        if (evt != Define.MouseEvent.Click)
+            return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * raycastDistance, Color.red, 1.0f);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, LayerMask.GetMask("Plane")))
+        {
+            destPos = hit.point;
+            moveToDest = true;
         }
     }
 }
