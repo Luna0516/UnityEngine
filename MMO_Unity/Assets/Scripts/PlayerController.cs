@@ -46,6 +46,16 @@ public class PlayerController : MonoBehaviour
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotSpeed);
         }
+
+        Animator anim = GetComponent<Animator>();
+        if(moveToDest)
+        {
+            anim.Play("RUN");
+        }
+        else
+        {
+            anim.Play("WAIT");
+        }
     }
 
     /// <summary>
