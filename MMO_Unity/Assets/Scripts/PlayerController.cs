@@ -35,9 +35,9 @@ public class PlayerController : MonoBehaviour
         Die,
         Moving,
         Idle,
-        Channeling,
-        Jumping,
-        Falling,
+        //Channeling,
+        //Jumping,
+        //Falling,
     }
 
     PlayerState playerState = PlayerState.Idle;
